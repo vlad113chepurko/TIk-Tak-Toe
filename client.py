@@ -11,6 +11,8 @@ root.title("Tic Tak Toe")
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((PATH, PORT))
 
+label = Label(text="Winner will be here.")
+
 print("Client started...")
 
 def handle_button(resp, btn):
@@ -18,19 +20,16 @@ def handle_button(resp, btn):
 
     server_resp = client.recv(1024).decode()
 
-    if server_resp == "X" or server_resp == "O":
-        btn.config(text=server_resp)
-    elif server_resp == 'Player X won!':
-        label = Label(text="Player X is won!")
-        label.pack()
-        client.close()
-    elif server_resp == "Player O won!":
-        label = Label(text="Player O won!")
-        label.pack()
-        client.close()
+    if "Winner" in server_resp:
+        print(server_resp)
+        label.config(text=server_resp)
+    elif server_resp == "Game Over":
+        print("Game Over")
+        label.config(text="Game Over")
+    elif server_resp == "Invalid move":
+        print("Invalid move, try again.")
     else:
-        print("Error")
-        client.close()
+        btn.config(text=server_resp)
 
 
 
@@ -45,7 +44,7 @@ btn6 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: h
 
 btn7 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(7, btn7))
 btn8 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(8, btn8))
-btn9 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(9, btn9 ))
+btn9 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(9, btn9))
 
 btn1.grid(column=1, row=1)
 btn2.grid(column=2, row=1)
