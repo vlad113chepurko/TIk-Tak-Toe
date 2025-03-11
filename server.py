@@ -1,8 +1,7 @@
 import socket
-from tkinter import *
 
 PATH = "127.0.0.1"
-PORT = 5000
+PORT = 12345
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((PATH, PORT))
