@@ -1,17 +1,21 @@
 import socket
 
 PATH = "127.0.0.1"
-PORT = 12345
+PORT = 5000
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((PATH, PORT))
 server.listen(1)
 
-print("Server started....")
+print("Server started...")
 
 conn, addr = server.accept()
 
-print(f"{addr}")
+print(f"Connect: {addr}")
+
+playerX = True
+
+board = ["?" for _ in range(9)]
 
 while True:
     try:
@@ -19,9 +23,18 @@ while True:
         if not data:
             print("Data is not")
             break
-        print(f"Data: {data}")
+
+        move = int(data.decode()) - 1
+
+        if board[move] == "?":
+            board[move] = "X" if playerX else "O"
+
+            conn.send(board[move].encode())
+            playerX = not playerX
+
     except Exception as e:
         print(f"Error: {e}")
+        break
 
 server.close()
 conn.close()

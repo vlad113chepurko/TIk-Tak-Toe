@@ -2,7 +2,7 @@ import socket
 from tkinter import *
 
 PATH = "127.0.0.1"
-PORT = 12345
+PORT = 5000
 
 root = Tk()
 root.geometry("500x500")
@@ -13,17 +13,39 @@ client.connect((PATH, PORT))
 
 print("Client started...")
 
-btn1 = Button(root, text="?", bg="orange", font=("Arial", 30))
-btn2 = Button(root, text="?", bg="orange", font=("Arial", 30))
-btn3 = Button(root, text="?", bg="orange", font=("Arial", 30))
+def handle_button(resp, btn):
+    client.send(str(resp).encode())
 
-btn4 = Button(root, text="?", bg="orange", font=("Arial", 30))
-btn5 = Button(root, text="?", bg="orange", font=("Arial", 30))
-btn6 = Button(root, text="?", bg="orange", font=("Arial", 30))
+    server_resp = client.recv(1024).decode()
 
-btn7 = Button(root, text="?", bg="orange", font=("Arial", 30))
-btn8 = Button(root, text="?", bg="orange", font=("Arial", 30))
-btn9 = Button(root, text="?", bg="orange", font=("Arial", 30))
+    if server_resp == "X" or server_resp == "O":
+        btn.config(text=server_resp)
+    elif server_resp == 'Player X won!':
+        label = Label(text="Player X is won!")
+        label.pack()
+        client.close()
+    elif server_resp == "Player O won!":
+        label = Label(text="Player O won!")
+        label.pack()
+        client.close()
+    else:
+        print("Error")
+        client.close()
+
+
+
+
+btn1 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(1, btn1))
+btn2 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(2, btn2))
+btn3 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(3, btn3))
+
+btn4 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(4, btn4))
+btn5 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(5, btn5))
+btn6 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(6, btn6))
+
+btn7 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(7, btn7))
+btn8 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(8, btn8))
+btn9 = Button(root, text="?", bg="orange", font=("Arial", 30), command=lambda: handle_button(9, btn9 ))
 
 btn1.grid(column=1, row=1)
 btn2.grid(column=2, row=1)
@@ -35,9 +57,4 @@ btn7.grid(column=1, row=3)
 btn8.grid(column=2, row=3)
 btn9.grid(column=3, row=3)
 
-res = 5
-
-client.send(str(res).encode())
-
-client.close()
 root.mainloop()
